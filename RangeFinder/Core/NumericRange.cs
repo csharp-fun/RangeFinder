@@ -11,4 +11,8 @@ namespace RangeFinder.Core;
 /// to manage additional data within the elements, while avoiding inheritance constraints.
 /// </summary>
 public sealed record NumericRange<TNumber>(TNumber Start, TNumber End)
-    : INumericRange<TNumber> where TNumber: INumber<TNumber>;
+    : INumericRange<TNumber> where TNumber: INumber<TNumber>
+{
+    [Obsolete("This constructor should be used only for serialization purposes.")]
+    public NumericRange() : this(TNumber.Zero, TNumber.Zero) { }
+}
