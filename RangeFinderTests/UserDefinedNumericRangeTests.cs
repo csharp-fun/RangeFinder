@@ -22,11 +22,24 @@ public class UserDefinedNumericRangeTests
             new(2.0, 3.2, "Extra: [2.0,3.2]"),
             new(3.0, 3.2, "Extra: [3.0,3.2]"),
         };
-        _rangeValueFinder = new InMemoryRangeFinder<double>(ranges);
         _rangeFinder = new InMemoryRangeFinder<double, UserDefinedNumericRange>(ranges);
-
     }
 
+    private void ExampleCodeForReadMe()
+    {
+        IEnumerable<UserDefinedNumericRange> resultsExceptTouching = _rangeFinder
+            .FindOverlappingRanges(new NumericRange<double>(2.0, 3.0), exceptTouching: true);
+        foreach (UserDefinedNumericRange range in resultsExceptTouching)
+            Console.WriteLine(range.UserAddedExtraMember); 
+        // Extra: [1.0,2.2], Extra: [2.0,3.2]
+ 
+        IEnumerable<UserDefinedNumericRange> resultsIncludeTouching = _rangeFinder
+            .FindOverlappingRanges(new NumericRange<double>(2.0, 3.0), exceptTouching: false);
+        foreach (UserDefinedNumericRange range in resultsIncludeTouching) 
+            Console.WriteLine(range.UserAddedExtraMember);
+        // Extra: [1.0,2.2], Extra: [2.0,3.2], Extra: [3.0,3.2]
+    }
+    
     [Test]
     public void FindOverlappingElementsTest()
     {
