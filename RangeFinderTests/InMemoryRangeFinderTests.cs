@@ -8,7 +8,7 @@ namespace RangeFinderTests;
 
 public class InMemoryRangeFinderTests
 {
-    private IRangeFinder<double> _inMemoryRangeFinder = null!;
+    private IRangeFinder<double, NumericRange<double>> _inMemoryRangeFinder = null!;
 
     [SetUp]
     public void Setup()
@@ -19,7 +19,7 @@ public class InMemoryRangeFinderTests
             new(1.0, 4.0), new(4.0, 5.0),
             new(5.0, 6.0), new(6.0, 20.0)
         };
-        _inMemoryRangeFinder = new InMemoryRangeFinder<double>(ranges);
+        _inMemoryRangeFinder = new InMemoryRangeFinder<double, NumericRange<double>>(ranges);
     }
 
     [Test]
@@ -45,7 +45,7 @@ public class InMemoryRangeFinderTests
     [Test]
     public void FindOverlappedElements_SpeedTest()
     {
-        var largeOverlapFinder = new InMemoryRangeFinder<double>(GenerateRandomRanges(5_000_000, 0, 5000));
+        var largeOverlapFinder = new InMemoryRangeFinder<double, NumericRange<double>>(GenerateRandomRanges(5_000_000, 0, 5000));
         const int totalQueryNumber = 100_000;
         var resultsCounter = new ConcurrentBag<int>();
         var sw = new Stopwatch();

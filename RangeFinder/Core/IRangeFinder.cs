@@ -2,15 +2,17 @@ using System.Numerics;
 
 namespace RangeFinder.Core;
 
-public interface IRangeFinder<TNumber> where TNumber : INumber<TNumber>
+public interface IRangeFinder<TNumber, out TCustomRange>
+    where TNumber : INumber<TNumber>
+    where TCustomRange: INumericRange<TNumber>
 {
     public int Length { get; }
 
-    public IEnumerable<INumericRange<TNumber>> FindOverlappingRanges(
+    public IEnumerable<TCustomRange> FindOverlappingRanges(
         INumericRange<TNumber> queryNumericRange, 
         bool exceptTouching = false);
 
-    public IEnumerable<INumericRange<TNumber>> FindRangesBetween(
+    public IEnumerable<TCustomRange> FindRangesBetween(
         INumericRange<TNumber> lower,
         INumericRange<TNumber> upper);
 }

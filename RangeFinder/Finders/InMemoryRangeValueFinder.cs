@@ -13,14 +13,14 @@ public class InMemoryRangeValueFinder<TNumber, TValue> where TNumber : INumber<T
 {
     // Note that RangeFinder allows duplicated NumericRanges, but RangeValueFinder doesn't.
     // it's only instantiated from IDictionary keys
-    private readonly InMemoryRangeFinder<TNumber> _inMemoryRangeFinder;
+    private readonly InMemoryRangeFinder<TNumber, NumericRange<TNumber>> _inMemoryRangeFinder;
     
     // Note that the Key type is limited to NumericRange as it's used for keys of Dictionary.
     private readonly IImmutableDictionary<NumericRange<TNumber>, TValue> _dic;
 
     private InMemoryRangeValueFinder(IImmutableDictionary<NumericRange<TNumber>, TValue> dic)
     {
-        _inMemoryRangeFinder = new InMemoryRangeFinder<TNumber>(dic.Keys);
+        _inMemoryRangeFinder = new InMemoryRangeFinder<TNumber,NumericRange<TNumber>>(dic.Keys);
         _dic = dic;
     }
 
@@ -39,13 +39,7 @@ public class InMemoryRangeValueFinder<TNumber, TValue> where TNumber : INumber<T
     {
         return _inMemoryRangeFinder
             .FindOverlappingRanges(queryINumericRange, exceptTouching)
-            .Select(range =>
-            {
-                if (range is not NumericRange<TNumber> numericRange) throw new NullReferenceException();
-                return new KeyValuePair<NumericRange<TNumber>, TValue>(
-                    numericRange,
-                    _dic[numericRange]);
-            });
+            .Select(range => new KeyValuePair<NumericRange<TNumber>, TValue>(range, _dic[range]));
     }
 
     public IEnumerable<KeyValuePair<NumericRange<TNumber>, TValue>> 
@@ -53,10 +47,6 @@ public class InMemoryRangeValueFinder<TNumber, TValue> where TNumber : INumber<T
     {
         return _inMemoryRangeFinder
             .FindRangesBetween(lower, upper)
-            .Select(range =>
-            {
-                if (range is not NumericRange<TNumber> numericRange) throw new NullReferenceException();
-                return new KeyValuePair<NumericRange<TNumber>, TValue>(numericRange, _dic[numericRange]);
-            });
+            .Select(range => new KeyValuePair<NumericRange<TNumber>, TValue>(range, _dic[range]));
     }
 }
